@@ -2,6 +2,8 @@ package com.alkemy.icons.icons.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -13,25 +15,25 @@ import java.util.List;
 @Table(name = "icon")
 @Getter
 @Setter
-/*@SQLDelete(sql = "UPDATE icon SET deleted = true WHERE id=?")
-@Where(clause = "deleted = false")*/
+@SQLDelete(sql = "UPDATE icon SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
 public class IconEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String image;
     @Column(name = "icon_name")
     private String iconName;
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false)
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate creationDate;
     private long height;
     private String history;
-    /*private boolean deleted = Boolean.false;*/
+    private boolean deleted = Boolean.FALSE;
     @ManyToMany(mappedBy = "icons", cascade = CascadeType.ALL)
     private List<CountryEntity> countries = new ArrayList<>();
 
-/*    //Add and delete countries
+/*    //Add and delete countries TODO: Comprobar si es necesario ponerlo en esta parte. En el proyecto está.
     public void addCountry(CountryEntity country) {
         this.countries.add(country);
     }

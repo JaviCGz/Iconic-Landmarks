@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class ContinentEntity {
 
     @Id
-    @GeneratedValue(Strategy =  GenerationType.SEQUENCE)
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long id;
     private String image;
     @Column(name = "continent_name")

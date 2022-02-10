@@ -12,29 +12,38 @@ import java.util.Set;
 @Setter
 public class CountryEntity {
 
+    @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long id;
     private String image;
+
     @Column(name = "country_name")
     private String countryName;
     private long population;
     private long area;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "continent_id", insertable = false, updatable = false)
     private ContinentEntity continent;
+
     @Column(name = "continent_id", nullable = false)
     private long continentId;
 
     @ManyToMany(
             cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(name = "icon_country", joinColumns = @JoinColumn(name = "country_id"), inverseJoinColumns = @JoinColumn(name = "icon_id"))
+    @JoinTable(
+            name = "icon_country",
+            joinColumns = @JoinColumn(name = "country_id"),
+            inverseJoinColumns = @JoinColumn(name = "icon_id"))
     private Set<IconEntity> icons = new HashSet<>();
 
+    @Override
     public boolean equals(Object obj) {
         if (obj == null)
             return false;
         if (getClass() != obj.getClass())
             return false;
         final CountryEntity other = (CountryEntity) obj;
-        return other.id;
+        return other.id == this.id;
     }
 }
