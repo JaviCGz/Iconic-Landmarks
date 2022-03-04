@@ -12,8 +12,8 @@ import javax.persistence.*;
 public class ContinentEntity {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String image;
     @Column(name = "continent_name")
     private String continentName;

@@ -27,7 +27,7 @@ public class ContinentMapper {
         return dto;
     }
 
-    public List<ContinentDTO> convertAllToDto(List<ContinentEntity> entities) {
+    public List<ContinentDTO> convertToDtoList(List<ContinentEntity> entities) {
         List<ContinentDTO> dtoList = new ArrayList<>();
         for (ContinentEntity entity : entities) {
             dtoList.add(convertToDto(entity));

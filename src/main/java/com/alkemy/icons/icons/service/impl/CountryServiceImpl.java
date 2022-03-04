@@ -14,22 +14,31 @@ import java.util.List;
 @Service
 public class CountryServiceImpl implements CountryService {
 
-    @Autowired
     CountryMapper countryMapper;
+    CountryRepository countryRepository;
 
     @Autowired
-    CountryRepository countryRepository;
+    public CountryServiceImpl(CountryMapper countryMapper, CountryRepository countryRepository) {
+        this.countryMapper = countryMapper;
+        this.countryRepository = countryRepository;
+    }
 
     public CountryDTO save(CountryDTO dto) {
         CountryEntity entity = countryMapper.convertToEntity(dto);
         CountryEntity entitySaved = countryRepository.save(entity);
-        CountryDTO result = countryMapper.convertToDto(entitySaved);
-        return result;
+        return countryMapper.convertToDto(entitySaved, true);
     }
 
     public List<BasicCountryDTO> getAllBasicCountries() {
         List<CountryEntity> entities = countryRepository.findAll();
-        List<BasicCountryDTO> result = countryMapper.convertAllToBasicDto(entities);
-        return result;
+        List<CountryDTO> dtoList = countryMapper.convertToDtoList(entities, true);
+        return countryMapper.convertToBasicDtoList(entities, false);
+    }
+
+    public CountryEntity getEntityById(Long id) {
+        return countryRepository.getById(id);
     }
 }
+
+/*TODO: Demo project's method named "getAllBasicCountries" brings all the information
+   instead of required basic information */

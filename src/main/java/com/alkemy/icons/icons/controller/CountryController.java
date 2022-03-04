@@ -28,4 +28,5 @@ public class CountryController {
         List<BasicCountryDTO> countries = countryService.getAllBasicCountries();
         return ResponseEntity.ok().body(countries);
     }
+
 }

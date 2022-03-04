@@ -14,23 +14,25 @@ public class CountryEntity {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
     private String image;
 
     @Column(name = "country_name")
     private String countryName;
-    private long population;
-    private long area;
+
+    private Long population;
+
+    private Long area;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "continent_id", insertable = false, updatable = false)
     private ContinentEntity continent;
 
     @Column(name = "continent_id", nullable = false)
-    private long continentId;
+    private Long continentId;
 
-    @ManyToMany(
-            cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "icon_country",
             joinColumns = @JoinColumn(name = "country_id"),

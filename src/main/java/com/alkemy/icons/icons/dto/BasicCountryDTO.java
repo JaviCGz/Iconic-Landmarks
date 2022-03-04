@@ -8,5 +8,6 @@ import lombok.Setter;
 public class BasicCountryDTO {
     private String image;
     private String countryName;
+    private String continent;
     private long population;
 }

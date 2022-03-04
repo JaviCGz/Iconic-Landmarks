@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class ContinentDTO {
 
-    private long id;
+    private Long id;
     private String image;
     private String continentName;
 }
