@@ -5,7 +5,6 @@ import com.alkemy.icons.icons.dto.CountryDTO;
 import com.alkemy.icons.icons.dto.IconDTO;
 import com.alkemy.icons.icons.entity.ContinentEntity;
 import com.alkemy.icons.icons.entity.CountryEntity;
-import com.alkemy.icons.icons.entity.IconEntity;
 import com.alkemy.icons.icons.repository.ContinentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Component
 public class CountryMapper {
@@ -32,7 +30,10 @@ public class CountryMapper {
         entity.setArea(dto.getArea());
         entity.setContinentId(dto.getContinentId());
 // ---------Icons---------
-        entity.setIcons(iconMapper.convertToEntityList(dto.getIcons()));
+        if (!(dto.getIcons() == null || dto.getIcons().size() == 0)) {
+            entity.setIcons(iconMapper.lookForOrCreateIcons(dto.getIcons()));
+            /*entity.setIcons(iconMapper.convertToEntityList(dto.getIcons()));*/
+        }
         return entity;
     }
 
@@ -44,10 +45,11 @@ public class CountryMapper {
         dto.setPopulation(entity.getPopulation());
         dto.setArea(entity.getArea());
         dto.setContinentId(entity.getContinentId());
-        dto.setIcons(null);
         if (loadIcons) {
                 List<IconDTO> dtoList = iconMapper.convertToDtoList(entity.getIcons(), false);
                 dto.setIcons(dtoList);
+        } else {
+            dto.setIcons(null);
         }
         return dto;
     }
@@ -82,8 +84,13 @@ public class CountryMapper {
         BasicCountryDTO basicDto = new BasicCountryDTO();
         basicDto.setImage(entity.getImage());
         basicDto.setCountryName(entity.getCountryName());
-        ContinentEntity continent = continentRepository.findById(entity.getContinentId()).get();
-        basicDto.setContinent(continent.getContinentName());
+        Optional<ContinentEntity> continent = continentRepository.findById(entity.getContinentId());
+        if (continent.isPresent()) {
+            basicDto.setContinent(continent.get().getContinentName());
+        }
+/*
+        continent.ifPresent(continentEntity -> basicDto.setContinent(continentEntity.getContinentName()));
+*/
         basicDto.setPopulation(entity.getPopulation());
         return basicDto;
     }

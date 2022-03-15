@@ -31,7 +31,9 @@ public class CountryServiceImpl implements CountryService {
 
     public List<BasicCountryDTO> getAllBasicCountries() {
         List<CountryEntity> entities = countryRepository.findAll();
-        List<CountryDTO> dtoList = countryMapper.convertToDtoList(entities, true);
+/*      List<CountryDTO> dtoList = countryMapper.convertToDtoList(entities, true);
+It makes not sense to create a dto list that is never used
+*/
         return countryMapper.convertToBasicDtoList(entities, false);
     }
 

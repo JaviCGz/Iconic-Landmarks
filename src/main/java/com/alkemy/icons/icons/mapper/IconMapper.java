@@ -4,6 +4,8 @@ import com.alkemy.icons.icons.dto.BasicIconDTO;
 import com.alkemy.icons.icons.dto.CountryDTO;
 import com.alkemy.icons.icons.dto.IconDTO;
 import com.alkemy.icons.icons.entity.IconEntity;
+import com.alkemy.icons.icons.exception.ParamNotFound;
+import com.alkemy.icons.icons.repository.IconRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,11 @@ public class IconMapper {
 
     @Autowired
     CountryMapper countryMapper;
+
+    //This repository shouldn't be here but instantiating an iconMapper instead causes
+    // a circular reference
+    @Autowired
+    IconRepository iconRepository;
 
     /*-------------------------------------Conversions---------------------------------------------*/
 
@@ -47,7 +54,7 @@ public class IconMapper {
     public List<IconDTO> convertToDtoList(Collection<IconEntity> entities, boolean loadCountries) {
         List<IconDTO> dtoList = new ArrayList<>();
         for (IconEntity entity : entities) {
-            dtoList.add(convertToDto(entity, loadCountries)); //TODO: Se está pasando en falso el load?
+            dtoList.add(convertToDto(entity, loadCountries));
         }
         return dtoList;
     }
@@ -75,6 +82,7 @@ public class IconMapper {
         entity.setHeight(iconDTO.getHeight());
         entity.setHistory(iconDTO.getHistory());
     }
+
     /*----------------------------------Internal class methods---------------------------------------*/
 
     private LocalDate convertStringToLocalDate (String stringDate) {
@@ -88,6 +96,25 @@ public class IconMapper {
         basicDto.setImage(entity.getImage());
         basicDto.setIconName(entity.getIconName());
         return basicDto;
+    }
+
+    public Set<IconEntity> lookForOrCreateIcons (List<IconDTO> dtoList) {
+        Set<IconEntity> entities = new HashSet<>();
+        for (IconDTO dto : dtoList) {
+            if (dto.getId() != null) {
+                Optional<IconEntity> result = iconRepository.findById(dto.getId());
+                if (result.isPresent()) {
+                    entities.add(result.get());
+                } else {
+                    throw new ParamNotFound("A non-existent ID was received." +
+                            " New characters must not have an user-assign ID");
+//                    entities.add(iconMapper.convertToEntity(dto));
+                }
+            } else {
+                entities.add(convertToEntity(dto));
+            }
+        }
+        return entities;
     }
 
 }
