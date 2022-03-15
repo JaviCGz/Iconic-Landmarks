@@ -89,5 +89,5 @@ public class IconServiceImpl implements IconService {
         );
         return this.iconMapper.convertToDtoList(entities,true);
     }
-    
+
 }
